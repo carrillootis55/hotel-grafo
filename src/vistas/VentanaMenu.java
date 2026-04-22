@@ -6,14 +6,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import hotel.Hotel;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
 public class VentanaMenu extends JFrame {
+	
+	private Hotel hotel;
 
-    public VentanaMenu() {
-
+    public VentanaMenu(Hotel hotel) {
+    	
+    	this.hotel = hotel;
         setTitle("Menu Administrador");
         setSize(300,400);
         setLocationRelativeTo(null);
@@ -21,7 +27,7 @@ public class VentanaMenu extends JFrame {
 
         setLayout(new BorderLayout());
 
-        JLabel titulo = new JLabel("MENU HOTEL", SwingConstants.CENTER);
+        JLabel titulo = new JLabel("HOTEL", SwingConstants.CENTER);
         titulo.setFont(new Font("Times New Roman", Font.BOLD, 18));
 
         add(titulo, BorderLayout.NORTH);
@@ -35,7 +41,7 @@ public class VentanaMenu extends JFrame {
         JButton btnP2 = new JButton("Piso 2");
         JButton btnP3 = new JButton("Piso 3");
         JButton btnP4 = new JButton("Piso 4");
-        JButton btnSalir = new JButton("Salir");
+        JButton btnSalir = new JButton("Regresar");
 
         panelBotones.add(btnVerTodo);
         panelBotones.add(btnP1);
@@ -46,23 +52,27 @@ public class VentanaMenu extends JFrame {
 
         add(panelBotones, BorderLayout.CENTER);
 
-        // EVENTOS
-        btnVerTodo.addActionListener(e -> abrirGrafo(-1));
-        btnP1.addActionListener(e -> abrirGrafo(0));
-        btnP2.addActionListener(e -> abrirGrafo(1));
-        btnP3.addActionListener(e -> abrirGrafo(2));
-        btnP4.addActionListener(e -> abrirGrafo(3));
 
-        //Salir al menu de inicio
+        btnVerTodo.addActionListener(e -> abrirArbol(-1));
+        btnP1.addActionListener(e -> abrirArbol(0));
+        btnP2.addActionListener(e -> abrirArbol(1));
+        btnP3.addActionListener(e -> abrirArbol(2));
+        btnP4.addActionListener(e -> abrirArbol(3));
+
         btnSalir.addActionListener(e -> {
-            new VentanaInicio().setVisible(true);
+            new VentanaPrincipal(hotel).setVisible(true);
             dispose();
         });
     }
-
-    private void abrirGrafo(int piso){
+    
+    private void abrirArbol(int piso){
+        new VentanaHotel(hotel, piso, false).setVisible(true);
+        dispose();
+    }
+    /*
+    private void abrirArbol(int piso){ 
         VentanaHotel v = new VentanaHotel(piso);
         v.setVisible(true);
         dispose();
-    }
+    }*/
 }

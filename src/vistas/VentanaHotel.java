@@ -8,15 +8,19 @@ import javax.swing.*;
 public class VentanaHotel extends JFrame {
 
     private Hotel hotel;
-    private PanelGrafo panel;
+    private PanelArbol panel;
     private JTextArea infoArea;
+    private boolean modoDesocupar;
 
-    public VentanaHotel(int pisoSeleccionado) {
+    public VentanaHotel(Hotel hotel, int pisoSeleccionado, boolean modoDesocupar) {
+    	this.modoDesocupar = modoDesocupar;
+    	this.hotel = hotel;
 
-        hotel = new Hotel();
-        SistemaHotel.inicializarDatos(hotel);
+        //hotel = new Hotel();
+        //SistemaHotel.inicializarDatos(hotel);
 
-        setTitle("Hotel");
+        //setTitle("Hotel");
+        setTitle(modoDesocupar ? "Desocupar Habitaciones" : "Visualizar Hotel");
         setSize(900, 600);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -29,47 +33,36 @@ public class VentanaHotel extends JFrame {
             }
         });
 
-        // ======================
-        // ÁREA DE INFO
-        // ======================
+
         infoArea = new JTextArea(8, 40);
         JScrollPane scrollInfo = new JScrollPane(infoArea);
-
-        // ======================
-        // PANEL DEL GRAFO
-        // ======================
-        panel = new PanelGrafo(hotel, infoArea);
+        
+        panel = new PanelArbol(hotel, infoArea, modoDesocupar);
+        //panel = new PanelArbol(hotel, infoArea);
         panel.setPiso(pisoSeleccionado);
 
  
         JScrollPane scrollGrafo = new JScrollPane(panel);
 
-        // ======================
-        // BOTÓN
-        // ======================
+
         JButton btnRegresar = new JButton("Regresar");
         btnRegresar.addActionListener(e -> regresarMenu());
 
         JPanel superior = new JPanel();
         superior.add(btnRegresar);
 
-        // ======================
-        // AGREGAR COMPONENTES
-        // ======================
         add(superior, BorderLayout.NORTH);
-        add(scrollGrafo, BorderLayout.CENTER); // 🔥 IMPORTANTE
+        add(scrollGrafo, BorderLayout.CENTER); 
         add(scrollInfo, BorderLayout.SOUTH);
 
-        // ======================
-        // FULLSCREEN AUTOMÁTICO
-        // ======================
+
         if (pisoSeleccionado == -1) {
             setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
     }
 
     private void regresarMenu() {
-        new VentanaMenu().setVisible(true);
+        new VentanaMenu(hotel).setVisible(true);
         dispose();
     }
 }

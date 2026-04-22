@@ -10,6 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import hotel.Hotel;
+import hotel.SistemaHotel;
+
 public class VentanaInicio extends JFrame {
 
     public VentanaInicio() {
@@ -20,7 +23,6 @@ public class VentanaInicio extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        //TEXTO
         JLabel titulo = new JLabel("HOTEL", SwingConstants.CENTER);
         titulo.setFont(new Font("Times New Roman", Font.BOLD, 26));
 
@@ -30,7 +32,6 @@ public class VentanaInicio extends JFrame {
         panelTexto.add(titulo);
         panelTexto.add(mensaje);
 
-        //BOTONES
         JButton btnIniciar = new JButton("Iniciar");
         JButton btnSalir = new JButton("Salir");
 
@@ -43,9 +44,16 @@ public class VentanaInicio extends JFrame {
         add(panelTexto, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);
 
-        //EVENTOS
+        /*btnIniciar.addActionListener(e -> {
+            new VentanaPrincipal().setVisible(true);
+            dispose();
+        });*/
+        
         btnIniciar.addActionListener(e -> {
-            new VentanaMenu().setVisible(true);
+            Hotel hotel = new Hotel();
+            SistemaHotel.inicializarDatos(hotel);
+
+            new VentanaPrincipal(hotel).setVisible(true);
             dispose();
         });
 
