@@ -553,49 +553,76 @@ public class Hotel {
 	 * 
 	 * @param habitacion Habitación a desocupar
 	 */
-	public void checkOut(Habitacion habitacion) {
-		if (habitacion == null) {
-			System.out.println("La habitación no existe");
-			System.out.println("-----------------------------------------");
-			return;
-		}
+	public String checkOut(Habitacion habitacion) {
 
-		Huesped huesped = habitacion.getHuespedTitular();
+	    if (habitacion == null) {
 
-		if (huesped == null) {
-			System.out.println("La habitación no está ocupada, no hay nadie para hacer check-out");
-			System.out.println("-----------------------------------------");
-			return;
-		}
+	        return "La habitación no existe";
+	    }
 
-		double base = habitacion.calcularCostoBase();
-		double servicios = huesped.totalServicios();
+	    Huesped huesped = habitacion.getHuespedTitular();
 
-		double totalSinDescuento = base + servicios;
-		double descuento = huesped.obtenerDescuento() * totalSinDescuento;
-		double totalFinal = totalSinDescuento - descuento;
+	    if (huesped == null) {
 
-		boolean exito = habitacion.desocupar();
+	        return "La habitación no está ocupada";
+	    }
 
-		if (exito) {
+	    double base = habitacion.calcularCostoBase();
 
-			System.out.println("El check-out se realizó exitosamente");
-			System.out.println("\n========== TICKET ==========");
-			System.out.println("Huésped: " + huesped.getNombre());
-			System.out.println("Habitación: " + habitacion.getClave());
-			System.out.println("__________________________________________");
-			System.out.println("Costo por habitación  $" + base);
-			System.out.println("Servicios             $" + servicios);
-			System.out.println("Descuento aplicado    $" + descuento);
-			System.out.println("___________________________________________");
-			System.out.println("TOTAL A PAGAR         $" + totalFinal);
-			System.out.println("___________________________________________");
+	    double servicios = huesped.totalServicios();
 
-		} else {
-			System.out.println("La habitación no está ocupada, por ende NO se puede hacer check-out");
-		}
+	    double totalSinDescuento = base + servicios;
 
+	    double descuento =
+	        huesped.obtenerDescuento() *
+	        totalSinDescuento;
+
+	    double totalFinal =
+	        totalSinDescuento - descuento;
+
+	    //====================================================
+	    // GUARDAR DATOS ANTES DE DESOCUPAR
+	    String nombre = huesped.getNombre();
+
+	    String clave = habitacion.getClave();
+
+	    boolean exito = habitacion.desocupar();
+
+	    //====================================================
+	    if (exito) {
+
+	        String ticket =
+
+	            "El check-out se realizó exitosamente\n\n" +
+
+	            "========== TICKET ==========\n" +
+
+	            "Huésped: " + nombre + "\n" +
+
+	            "Habitación: " + clave + "\n" +
+
+	            "__________________________________________\n" +
+
+	            "Costo por habitación  $" + base + "\n" +
+
+	            "Servicios             $" + servicios + "\n" +
+
+	            "Descuento aplicado    $" + descuento + "\n" +
+
+	            "___________________________________________\n" +
+
+	            "TOTAL A PAGAR         $" + totalFinal + "\n" +
+
+	            "___________________________________________";
+
+	        return ticket;
+	    }
+
+	    return "La habitación no está ocupada";
 	}
+	
+	
+	
 
 	// _____________________________________________________________________________________________
 	/**

@@ -20,8 +20,19 @@ public class VentanaInicio extends JFrame {
         setTitle("HOTEL");
         setSize(400,300);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        
+        /*addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    null,
+                    "Usa los botones del sistema para salir"
+                );
+            }
+        });*/
 
         JLabel titulo = new JLabel("HOTEL", SwingConstants.CENTER);
         titulo.setFont(new Font("Times New Roman", Font.BOLD, 26));

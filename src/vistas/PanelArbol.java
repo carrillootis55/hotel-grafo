@@ -41,12 +41,12 @@ public class PanelArbol extends JPanel {
             }
         });
     }
-
+  //______________________________________________________________________________________
     public void setPiso(int piso) {
         this.pisoSeleccionado = piso;
         repaint();
     }
-    
+  //______________________________________________________________________________________
     private void detectarClick(int x, int y) {
         Habitacion[][] habs = hotel.getHabitaciones();
 
@@ -56,10 +56,9 @@ public class PanelArbol extends JPanel {
                 if (posiciones[i][j] != null && posiciones[i][j].contains(x, y)) {
 
                     Habitacion h = habs[i][j];
+                    double precio = h.getPrecioPorNoche();
                     
-                    // =========================
-                    // MODO DESOCUPAR
-                    // =========================
+                    //DESOCUPAR
                     if (modoDesocupar && h.isOcupada()) {
 
                         int opcion = javax.swing.JOptionPane.showConfirmDialog(
@@ -70,23 +69,19 @@ public class PanelArbol extends JPanel {
                         );
 
                         if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                        	
+                        	String ticket = hotel.checkOut(h);
 
-                            hotel.checkOut(h);
+                        	new VentanaPago(ticket).setVisible(true);
 
-                            javax.swing.JOptionPane.showMessageDialog(
-                                this,
-                                "Pago realizado correctamente"
-                            );
-
-                            repaint(); //ACTUALIZA EL ÁRBOL
+                        	repaint();
+                            
                         }
 
                         return;
                     }
 
-                    // =========================
-                    // HABITACIÓN OCUPADA
-                    // =========================
+                    //Habitacion ocupada
                     if (h.isOcupada() && h.getHuespedTitular() != null) {
 
                         Huesped huesped = h.getHuespedTitular();
@@ -110,6 +105,11 @@ public class PanelArbol extends JPanel {
                         infoArea.setText(
                             "=== HABITACIÓN OCUPADA ===\n" +
                             h.getClave() + "\n\n" +
+                            		
+                            "Precio por noche: $" + precio + "\n\n" +
+                            
+							"Cantidad de noches: " +
+							h.getCantidadNoches() + "\n\n" +
 
                             "=== HUÉSPED ===\n" +
                             huesped.toString() + "\n\n" +
@@ -118,215 +118,282 @@ public class PanelArbol extends JPanel {
                             serviciosTexto
                         );
 
-                    // =========================
-                    // HABITACIÓN RESERVADA
-                    // =========================
+                    //HABITACION RESERVADA
                     } else if (h.isReservada() && h.getHuespedTitular() != null) {
 
                         infoArea.setText(
                             "=== HABITACIÓN RESERVADA ===\n" +
                             h.getClave() + "\n\n" +
+                            		
+							"Precio por noche: $" + precio + "\n\n" +
+							
                             "Reservado por:\n" +
                             h.getHuespedTitular().getNombre()
                         );
 
-                    // =========================
-                    // HABITACIÓN LIBRE
-                    // =========================
+
+                    //HABITACION LIBRE
+       
                     } else {
-                        infoArea.setText("Habitación libre: " + h.getClave());
+                        infoArea.setText("=== HABITACIÓN LIBRE ===\n" +
+                        	    h.getClave() + "\n" +
+                        	    "Precio por noche: $" + precio);
                     }
                 }
             }
         }
     }
-    /*
-    private void detectarClick(int x, int y) {
-        Habitacion[][] habs = hotel.getHabitaciones();
-
-        for (int i = 0; i < habs.length; i++) {
-            for (int j = 0; j < habs[i].length; j++) {
-
-                if (posiciones[i][j] != null && posiciones[i][j].contains(x, y)) {
-
-                    Habitacion h = habs[i][j];
-
-                    if (h.isOcupada() && h.getHuespedTitular() != null) {
-                        infoArea.setText(
-                            "=== HABITACIÓN ===\n" +
-                            h.getClave() + "\n\n" +
-                            "=== HUÉSPED ===\n" +
-                            h.getHuespedTitular().toString()
-                        );
-                    } else if (h.isReservada() && h.getHuespedTitular() != null) {
-                    	infoArea.setText(
-                    	        "=== HABITACIÓN RESERVADA ===\n" +
-                    	        h.getClave() + "\n\n" +
-                    	        "Reservado por:\n" +
-                    	        h.getHuespedTitular().getNombre()
-                    	    );
-                    } else {
-                        infoArea.setText("Habitación libre: " + h.getClave());
-                    }
-                }
-            }
-        }
-    }*/
-
+  //______________________________________________________________________________________
     @Override
     protected void paintComponent(Graphics g) {
+
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g2.setRenderingHint(
+            RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON
+        );
 
         Habitacion[][] habs = hotel.getHabitaciones();
 
         int radio = 25;
 
+        //=====================================================================
+        // RECEPCION
         int recepcionX = getWidth() / 2 - 60;
-        int recepcionY = 60;
+        int recepcionY = 20;
 
         g2.setColor(new Color(70,130,180));
+
         g2.fillOval(recepcionX, recepcionY, 120, 50);
 
         g2.setColor(Color.BLACK);
-        g2.drawOval(recepcionX, recepcionY, 120, 50);
-        g2.drawString("RECEPCION", recepcionX + 20, recepcionY + 30);
 
-        int pisoYBase = 150;
+        g2.drawOval(recepcionX, recepcionY, 120, 50);
+
+        g2.drawString(
+            "RECEPCION",
+            recepcionX + 20,
+            recepcionY + 30
+        );
 
         int totalPisos = habs.length;
+
         int espacio = getWidth() / (totalPisos + 1);
 
+        //=====================================================================
+        //RECORRER PISOS
         for (int i = 0; i < totalPisos; i++) {
 
-            if (pisoSeleccionado != -1 && i != pisoSeleccionado)
+            if (pisoSeleccionado != -1 &&
+                i != pisoSeleccionado) {
+
                 continue;
+            }
 
             int pisoX;
             int pisoY;
 
+            //=============================================================
+            //VISTA COMPLETA
             if (pisoSeleccionado == -1) {
 
                 pisoX = espacio * (i + 1) - 60;
-                pisoY = pisoYBase;
+                pisoY = 150;
+
+            //=============================================================
+            // VISTA INDIVIDUAL
             } else {
 
-                pisoX = getWidth() / 2 - 60;
-                pisoY = getHeight() / 3;
+                pisoX = getWidth() / 2 - 50;
+                pisoY = 120;
             }
 
+            //=============================================================
+            // DIBUJAR PISO
             g2.setColor(new Color(70,130,180));
-            g2.fillOval(pisoX, pisoY, 120, 80);
+
+            g2.fillOval(pisoX, pisoY, 100, 70);
 
             g2.setColor(Color.BLACK);
-            g2.drawOval(pisoX, pisoY, 120, 80);
-            g2.drawString("PISO " + (i+1), pisoX + 30, pisoY + 45);
 
+            g2.drawOval(pisoX, pisoY, 100, 70);
+
+            g2.drawString(
+                "PISO " + (i+1),
+                pisoX + 22,
+                pisoY + 40
+            );
+
+            //Lineas curvas
             QuadCurve2D curvaRP = new QuadCurve2D.Float();
 
             int x1 = recepcionX + 60;
             int y1 = recepcionY + 50;
 
-            int x2 = pisoX + 60;
+            int x2 = pisoX + 50;
             int y2 = pisoY;
 
             int ctrlX = (x1 + x2) / 2;
             int ctrlY = y1 + 50;
 
-            curvaRP.setCurve(x1, y1, ctrlX, ctrlY, x2, y2);
+            curvaRP.setCurve(
+                x1,
+                y1,
+                ctrlX,
+                ctrlY,
+                x2,
+                y2
+            );
+
             g2.draw(curvaRP);
 
-            // ======================
-            // HABITACIONES
-            // ======================
+            //=============================================================
+            //HABITACIONES
             int totalHab = habs[i].length;
+
             int separacion = 70;
 
-            //int anchoTotal = totalHab * separacion;
-            //int inicioX = pisoX + 60 - (anchoTotal / 2);
-            
-            int espacioPorPiso = getWidth() / totalPisos;
-
-            int inicioBloque = espacioPorPiso * i;
-            int finBloque = espacioPorPiso * (i + 1);
-
-            // centro del bloque
-            int centroBloque = (inicioBloque + finBloque) / 2;
-
-            // ancho del grupo de habitaciones
             int anchoTotal = totalHab * separacion;
 
-            // inicio real centrado dentro del bloque
-            int inicioX = centroBloque - (anchoTotal / 2);
+            int inicioX;
+
+            // VISTA COMPLETA
+            if (pisoSeleccionado == -1) {
+
+                int espacioPorPiso =
+                    getWidth() / totalPisos;
+
+                int inicioBloque =
+                    espacioPorPiso * i;
+
+                int finBloque =
+                    espacioPorPiso * (i + 1);
+
+                int centroBloque =
+                    (inicioBloque + finBloque) / 2;
+
+                inicioX =
+                    centroBloque - (anchoTotal / 2);
+
+            //=============================================================
+            // VISTA INDIVIDUAL
+            } else {
+
+                inicioX =
+                    (getWidth() / 2) -
+                    (anchoTotal / 2);
+            }
 
             int habY;
 
+            //=============================================================
+            // POSICION HABITACIONES
             if (pisoSeleccionado == -1) {
+
                 habY = pisoY + 160;
+
             } else {
-                habY = pisoY + 180;
+
+                habY = pisoY + 130;
             }
 
+            //=============================================================
+            //DIBUJAR HABITACIONES
             for (int j = 0; j < totalHab; j++) {
 
                 int x = inicioX + j * separacion;
                 int y = habY;
 
                 Habitacion h = habs[i][j];
-                
-                //FILTRO PARA MODO DESOCUPAR
-                if (modoDesocupar && !h.isOcupada()) {
+
+                //=========================================================
+                //FILTRO MODO DESOCUPAR
+                if (modoDesocupar &&
+                    !h.isOcupada()) {
+
                     posiciones[i][j] = null;
                     continue;
                 }
 
-                posiciones[i][j] = new Rectangle(x, y, radio*2, radio*2);
+                posiciones[i][j] =
+                    new Rectangle(
+                        x,
+                        y,
+                        radio * 2,
+                        radio * 2
+                    );
 
+                //=========================================================
+                //COLOR HABITACION
+                if (h.isOcupada()) {
 
-                if (h.isOcupada())
                     g2.setColor(Color.RED);
-                else if (h.isReservada())
-                    g2.setColor(Color.YELLOW);
-                else
-                    g2.setColor(Color.GREEN);
 
-                g2.fillOval(x, y, radio*2, radio*2);
+                } else if (h.isReservada()) {
+
+                    g2.setColor(Color.YELLOW);
+
+                } else {
+
+                    g2.setColor(Color.GREEN);
+                }
+
+                g2.fillOval(
+                    x,
+                    y,
+                    radio * 2,
+                    radio * 2
+                );
 
                 g2.setColor(Color.BLACK);
-                g2.drawOval(x, y, radio*2, radio*2);
 
-                g2.drawString(h.getClave(), x+5, y+30);
+                g2.drawOval(
+                    x,
+                    y,
+                    radio * 2,
+                    radio * 2
+                );
 
+                g2.drawString(
+                    h.getClave(),
+                    x + 5,
+                    y + 30
+                );
 
-                QuadCurve2D curva = new QuadCurve2D.Float();
+                //=========================================================
+                //Lineas curvas
+                QuadCurve2D curva =
+                    new QuadCurve2D.Float();
 
-                int origenX = pisoX + 60;
-                int origenY = pisoY + 80;
+                int origenX = pisoX + 50;
+                int origenY = pisoY + 70;
 
                 int destinoX = x + radio;
                 int destinoY = y;
 
-                int offset = (j - totalHab / 2) * 25;
+                int offset =
+                    (j - totalHab / 2) * 25;
 
-                int controlX = (origenX + destinoX) / 2 + offset;
+                int controlX =
+                    (origenX + destinoX) / 2 + offset;
+
                 int controlY = origenY + 70;
 
-                curva.setCurve(origenX, origenY, controlX, controlY, destinoX, destinoY);
+                curva.setCurve(
+                    origenX,
+                    origenY,
+                    controlX,
+                    controlY,
+                    destinoX,
+                    destinoY
+                );
+
                 g2.draw(curva);
             }
         }
 
-
-        int altoNecesario = 400;
-        if (pisoSeleccionado == -1) {
-            altoNecesario = 500;
-        } else {
-            altoNecesario = getHeight();
-        }
-
-        setPreferredSize(new Dimension(getWidth(), altoNecesario));
-        revalidate();
     }
 }

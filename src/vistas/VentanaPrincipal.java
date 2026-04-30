@@ -22,8 +22,12 @@ public class VentanaPrincipal extends JFrame {
 
         setTitle("Menu Hotel");
         setSize(350,300);
+        setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
+
 
         setLayout(new BorderLayout());
 

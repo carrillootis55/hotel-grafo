@@ -23,7 +23,10 @@ public class VentanaMenu extends JFrame {
         setTitle("Menu Administrador");
         setSize(300,400);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        //setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
 
         setLayout(new BorderLayout());
 
