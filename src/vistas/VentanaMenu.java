@@ -21,7 +21,9 @@ public class VentanaMenu extends JFrame {
     	
     	this.hotel = hotel;
         setTitle("Menu Administrador");
-        setSize(300,400);
+        //setSize(300,400);
+        //setSize(380,500);
+        setSize(380,420);
         setLocationRelativeTo(null);
         setResizable(false);
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -37,7 +39,9 @@ public class VentanaMenu extends JFrame {
 
         JPanel panelBotones = new JPanel();
         panelBotones.setLayout(new GridLayout(6,1,10,10));
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(20,50,20,50));
+        //panelBotones.setBorder(BorderFactory.createEmptyBorder(20,50,20,50));
+        //panelBotones.setBorder(BorderFactory.createEmptyBorder(40,70,40,70));
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(20,70,20,70));
 
         JButton btnVerTodo = new JButton("Ver Todo");
         JButton btnP1 = new JButton("Piso 1");
@@ -72,10 +76,5 @@ public class VentanaMenu extends JFrame {
         new VentanaHotel(hotel, piso, false).setVisible(true);
         dispose();
     }
-    /*
-    private void abrirArbol(int piso){ 
-        VentanaHotel v = new VentanaHotel(piso);
-        v.setVisible(true);
-        dispose();
-    }*/
+
 }

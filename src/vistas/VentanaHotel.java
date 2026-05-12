@@ -19,10 +19,6 @@ public class VentanaHotel extends JFrame {
     	this.modoDesocupar = modoDesocupar;
     	this.hotel = hotel;
 
-        //hotel = new Hotel();
-        //SistemaHotel.inicializarDatos(hotel);
-
-        //setTitle("Hotel");
         setTitle(modoDesocupar ? "Desocupar Habitaciones" : "Visualizar Hotel");
         setSize(900, 600);
         setResizable(false);
@@ -46,9 +42,6 @@ public class VentanaHotel extends JFrame {
         panel = new PanelArbol(hotel, infoArea, modoDesocupar);
         //panel = new PanelArbol(hotel, infoArea);
         panel.setPiso(pisoSeleccionado); 
-
- 
-        //JScrollPane scrollGrafo = new JScrollPane(panel);
 
 
         JButton btnRegresar = new JButton("Regresar");

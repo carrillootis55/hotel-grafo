@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,21 +20,15 @@ public class VentanaInicio extends JFrame {
     public VentanaInicio() {
 
         setTitle("HOTEL");
-        setSize(400,300);
+        //setSize(400,300);
+        //setSize(380,500);
+        setSize(380,220);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        
-        /*addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent e) {
-                javax.swing.JOptionPane.showMessageDialog(
-                    null,
-                    "Usa los botones del sistema para salir"
-                );
-            }
-        });*/
+       
 
         JLabel titulo = new JLabel("HOTEL", SwingConstants.CENTER);
         titulo.setFont(new Font("Times New Roman", Font.BOLD, 26));
@@ -45,21 +41,63 @@ public class VentanaInicio extends JFrame {
 
         JButton btnIniciar = new JButton("Iniciar");
         JButton btnSalir = new JButton("Salir");
+        
+        JPanel panelBotones = new JPanel();
 
-        JPanel panelBotones = new JPanel(new GridLayout(2,1,10,10));
-        panelBotones.setBorder(BorderFactory.createEmptyBorder(20,80,20,80));
+        panelBotones.setLayout(
+            new BoxLayout(
+                panelBotones,
+                BoxLayout.Y_AXIS
+            )
+        );
+
+        panelBotones.setBorder(
+            BorderFactory.createEmptyBorder(
+                20,
+                110,
+                20,
+                110
+            )
+        );
+
+
+        btnIniciar.setPreferredSize(
+            new java.awt.Dimension(120,35)
+        );
+
+        btnSalir.setPreferredSize(
+            new java.awt.Dimension(120,35)
+        );
+
+        btnIniciar.setMaximumSize(
+            btnIniciar.getPreferredSize()
+        );
+
+        btnSalir.setMaximumSize(
+            btnSalir.getPreferredSize()
+        );
+
+        btnIniciar.setAlignmentX(CENTER_ALIGNMENT);
+
+        btnSalir.setAlignmentX(CENTER_ALIGNMENT);
+
+
+        btnIniciar.setFocusPainted(false);
+
+        btnSalir.setFocusPainted(false);
 
         panelBotones.add(btnIniciar);
+
+        panelBotones.add(
+            Box.createVerticalStrut(15)
+        );
+
         panelBotones.add(btnSalir);
 
         add(panelTexto, BorderLayout.NORTH);
         add(panelBotones, BorderLayout.CENTER);
 
-        /*btnIniciar.addActionListener(e -> {
-            new VentanaPrincipal().setVisible(true);
-            dispose();
-        });*/
-        
+       
         btnIniciar.addActionListener(e -> {
             Hotel hotel = new Hotel();
             SistemaHotel.inicializarDatos(hotel);

@@ -394,6 +394,54 @@ public class PanelArbol extends JPanel {
                 g2.draw(curva);
             }
         }
+        
+        //=========================================================
+        //SIMBOLOGÍA
+
+        int leyendaX = 20;
+        int leyendaY = 20;
+
+        g2.setColor(Color.BLACK);
+        g2.drawString("SIMBOLOGÍA:", leyendaX, leyendaY);
+
+        //ROJO 
+        g2.setColor(Color.RED);
+        g2.fillRect(leyendaX, leyendaY + 10, 20, 20);
+
+        g2.setColor(Color.BLACK);
+        g2.drawRect(leyendaX, leyendaY + 10, 20, 20);
+
+        g2.drawString(
+            "Ocupada",
+            leyendaX + 30,
+            leyendaY + 25
+        );
+
+        //AMARILLO
+        g2.setColor(Color.YELLOW);
+        g2.fillRect(leyendaX, leyendaY + 40, 20, 20);
+
+        g2.setColor(Color.BLACK);
+        g2.drawRect(leyendaX, leyendaY + 40, 20, 20);
+
+        g2.drawString(
+            "Reservada",
+            leyendaX + 30,
+            leyendaY + 55
+        );
+
+        //VERDE
+        g2.setColor(Color.GREEN);
+        g2.fillRect(leyendaX, leyendaY + 70, 20, 20);
+
+        g2.setColor(Color.BLACK);
+        g2.drawRect(leyendaX, leyendaY + 70, 20, 20);
+
+        g2.drawString(
+            "Libre",
+            leyendaX + 30,
+            leyendaY + 85
+        );
 
     }
 }
