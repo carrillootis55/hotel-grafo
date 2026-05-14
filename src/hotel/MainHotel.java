@@ -3,7 +3,8 @@ package hotel;
 import java.util.Scanner;
 /**
 *Clase en la que se muestra un menu interactivo para el hotel
-*@author Otilio Gamboa Carrillo, Alejandro Manuel Cota Ayala
+*@author Otilio Gamboa Carrillo
+*@author Alejandro Manuel Cota Ayala
 */
 public class MainHotel {
 

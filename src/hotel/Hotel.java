@@ -4,7 +4,8 @@ import java.util.Scanner;
 /**
  * Clase Hotel Gestiona todas las habitaciones, huéspedes y operaciones del
  * sistema.
- * @author Otilio Gamboa Carrillo, Alejandro Manuel Cota Ayala
+ * @author Otilio Gamboa Carrillo
+ * @author Alejandro Manuel Cota Ayala
  */
 public class Hotel {
 
