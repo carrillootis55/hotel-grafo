@@ -13,8 +13,21 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-public class VentanaPago extends JFrame {
+/**
+ * Ventana encargada de mostrar el ticket de pago generado al realizar el check-out de una habitacion
+ * 
+ * La ventana muestra:
+ *-Informacion del ticket
+ *-Boton para cerrar la ventana
+ */
 
+public class VentanaPago extends JFrame {
+	
+	/**
+    * Constructor de la ventana de pago
+    * 
+    * @param ticket texto con la informacion del ticket
+    */
     public VentanaPago(String ticket) {
 
         setTitle("Ticket de Pago");

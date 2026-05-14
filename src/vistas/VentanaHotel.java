@@ -6,7 +6,21 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Insets;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+/**
+* Ventana encargada de mostrar el arbol del hotel
+* Esta ventana permite:
+* -Visualizar todas las habitaciones
+* -Visualizar un piso especifico
+* -Mostrar informacion de habitaciones
+* -Desocupar habitaciones
+* 
+*/
 
 public class VentanaHotel extends JFrame {
 
@@ -14,6 +28,14 @@ public class VentanaHotel extends JFrame {
     private PanelArbol panel;
     private JTextArea infoArea;
     private boolean modoDesocupar;
+    
+    /**
+     * Constructor de la ventana del hotel
+     * 
+     * @param hotel hotel a visualizar
+     * @param pisoSeleccionado piso que se mostrara (-1 = todos los pisos)
+     * @param modoDesocupar indica si se usara en modo check-out
+     */
 
     public VentanaHotel(Hotel hotel, int pisoSeleccionado, boolean modoDesocupar) {
     	this.modoDesocupar = modoDesocupar;
@@ -21,6 +43,7 @@ public class VentanaHotel extends JFrame {
 
         setTitle(modoDesocupar ? "Desocupar Habitaciones" : "Visualizar Hotel");
         setSize(900, 600);
+        //Evitar cambiar tamaño de ventana
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -39,8 +62,8 @@ public class VentanaHotel extends JFrame {
         
         JScrollPane scrollInfo = new JScrollPane(infoArea);
         
+        //Panel del arbol
         panel = new PanelArbol(hotel, infoArea, modoDesocupar);
-        //panel = new PanelArbol(hotel, infoArea);
         panel.setPiso(pisoSeleccionado); 
 
 
@@ -57,7 +80,10 @@ public class VentanaHotel extends JFrame {
         //Siempre abrir maximizado
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
-
+    
+    /**
+    *Regresa al menu correspondiente dependiendo del modo actual
+    */
     private void regresarMenu() {
         //Si viene del modo desocupar
         if (modoDesocupar) {

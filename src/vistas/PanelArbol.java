@@ -6,7 +6,6 @@ import hotel.Huesped;
 import hotel.Servicio;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -17,48 +16,89 @@ import java.awt.geom.QuadCurve2D;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+/**
+*Panel encargado de dibujar el arbol del hotel
+*En este panel se representan:
+*-La recepcion
+*-Los pisos
+*-Las habitaciones
+* 
+*Se interactua con las habitaciones haciendo clic
+* 
+*Se representa con colores:
+*Rojo = ocupada
+*Amarillo = reservada
+*Verde = libre
+* 
+*/
 
 public class PanelArbol extends JPanel {
-
+	
     private Hotel hotel;
     private int pisoSeleccionado = -1;
     private JTextArea infoArea;
     private boolean modoDesocupar;
-
+    
+    //Guarda las posiciones de las habitaciones dibujadas para detectar clics sobre ellas
     private Rectangle[][] posiciones;
-
+    
+    /**
+    * Constructor del panel
+    * 
+    * @param hotel hotel con las habitaciones
+    * @param infoArea area de texto donde se mostrara información
+    * @param modoDesocupar indica si el panel funcionara en modo desocupar
+    */
     public PanelArbol(Hotel hotel, JTextArea infoArea, boolean modoDesocupar) {
         this.hotel = hotel;
         this.infoArea = infoArea;
         this.modoDesocupar = modoDesocupar;
-
+        
+        //Matriz de posiciones de habitaciones
         posiciones = new Rectangle[4][5];
-
+        //Detectar clics del mouse
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+            	//Se verifica donde hizo clic el usuario
                 detectarClick(e.getX(), e.getY());
             }
         });
     }
   //______________________________________________________________________________________
+    /**
+    * Cambia el piso seleccionado
+    * 
+    * @param piso piso a mostrar
+    */
     public void setPiso(int piso) {
         this.pisoSeleccionado = piso;
         repaint();
     }
   //______________________________________________________________________________________
+    /**
+    * Detecta si el usuario hizo clic sobre alguna habitacion
+    * 
+    * Dependiendo del estado de la habitación:
+    * -Muestra información
+    * -Permite hacer check-out
+    * 
+    * @param x coordenada X del clic
+    * @param y coordenada Y del clic
+    */
     private void detectarClick(int x, int y) {
         Habitacion[][] habs = hotel.getHabitaciones();
-
+        //Recorrer habitaciones
         for (int i = 0; i < habs.length; i++) {
             for (int j = 0; j < habs[i].length; j++) {
-
+            	
+            	//Verificar si el clic es dentro de la habitación
                 if (posiciones[i][j] != null && posiciones[i][j].contains(x, y)) {
 
                     Habitacion h = habs[i][j];
                     double precio = h.getPrecioPorNoche();
                     
-                    //DESOCUPAR
+                    //Desocupar habitacion
                     if (modoDesocupar && h.isOcupada()) {
 
                         int opcion = javax.swing.JOptionPane.showConfirmDialog(
@@ -67,7 +107,8 @@ public class PanelArbol extends JPanel {
                             "Confirmar",
                             javax.swing.JOptionPane.YES_NO_OPTION
                         );
-
+                        
+                        //Si se confirma se imprime el ticket
                         if (opcion == javax.swing.JOptionPane.YES_OPTION) {
                         	
                         	String ticket = hotel.checkOut(h);
@@ -103,7 +144,7 @@ public class PanelArbol extends JPanel {
                         }
 
                         infoArea.setText(
-                            "=== HABITACIÓN OCUPADA ===\n" +
+                            "===HABITACIÓN OCUPADA===\n" +
                             h.getClave() + "\n\n" +
                             		
                             "Precio por noche: $" + precio + "\n\n" +
@@ -111,10 +152,10 @@ public class PanelArbol extends JPanel {
 							"Cantidad de noches: " +
 							h.getCantidadNoches() + "\n\n" +
 
-                            "=== HUÉSPED ===\n" +
+                            "===HUÉSPED===\n" +
                             huesped.toString() + "\n\n" +
 
-                            "=== SERVICIOS ===\n" +
+                            "===SERVICIOS===\n" +
                             serviciosTexto
                         );
 
@@ -122,7 +163,7 @@ public class PanelArbol extends JPanel {
                     } else if (h.isReservada() && h.getHuespedTitular() != null) {
 
                         infoArea.setText(
-                            "=== HABITACIÓN RESERVADA ===\n" +
+                            "===HABITACIÓN RESERVADA===\n" +
                             h.getClave() + "\n\n" +
                             		
 							"Precio por noche: $" + precio + "\n\n" +
@@ -144,27 +185,39 @@ public class PanelArbol extends JPanel {
         }
     }
   //______________________________________________________________________________________
+    
+    /**
+    * Metodo encargado de dibujar todos los elementos graficos:
+    * -Recepcion
+    * -Pisos
+    * -Habitaciones
+    * -Lineas de conexion
+    * -Simbología
+    * 
+    * @param g objeto grafico
+    */
     @Override
     protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-
+        //Suavizado de graficos
         g2.setRenderingHint(
             RenderingHints.KEY_ANTIALIASING,
             RenderingHints.VALUE_ANTIALIAS_ON
         );
 
         Habitacion[][] habs = hotel.getHabitaciones();
-
+        
+        //Radio de habitaciones
         int radio = 25;
 
         //=====================================================================
-        // RECEPCION
+        //RECEPCION
         int recepcionX = getWidth() / 2 - 60;
         int recepcionY = 20;
-
+        //Se dibuja recepcion
         g2.setColor(new Color(70,130,180));
 
         g2.fillOval(recepcionX, recepcionY, 120, 50);
@@ -186,9 +239,8 @@ public class PanelArbol extends JPanel {
         //=====================================================================
         //RECORRER PISOS
         for (int i = 0; i < totalPisos; i++) {
-
-            if (pisoSeleccionado != -1 &&
-                i != pisoSeleccionado) {
+        	// Si hay un piso seleccionado, ignora a los demas
+            if (pisoSeleccionado != -1 && i != pisoSeleccionado) {
 
                 continue;
             }
@@ -204,7 +256,7 @@ public class PanelArbol extends JPanel {
                 pisoY = 150;
 
             //=============================================================
-            // VISTA INDIVIDUAL
+            //VISTA INDIVIDUAL
             } else {
 
                 pisoX = getWidth() / 2 - 50;
@@ -212,7 +264,7 @@ public class PanelArbol extends JPanel {
             }
 
             //=============================================================
-            // DIBUJAR PISO
+            //DIBUJAR PISO
             g2.setColor(new Color(70,130,180));
 
             g2.fillOval(pisoX, pisoY, 100, 70);
@@ -260,7 +312,7 @@ public class PanelArbol extends JPanel {
 
             int inicioX;
 
-            // VISTA COMPLETA
+            //VISTA COMPLETA
             if (pisoSeleccionado == -1) {
 
                 int espacioPorPiso =
@@ -279,7 +331,7 @@ public class PanelArbol extends JPanel {
                     centroBloque - (anchoTotal / 2);
 
             //=============================================================
-            // VISTA INDIVIDUAL
+            //VISTA INDIVIDUAL
             } else {
 
                 inicioX =
@@ -290,7 +342,7 @@ public class PanelArbol extends JPanel {
             int habY;
 
             //=============================================================
-            // POSICION HABITACIONES
+            //POSICION HABITACIONES
             if (pisoSeleccionado == -1) {
 
                 habY = pisoY + 160;
@@ -309,7 +361,7 @@ public class PanelArbol extends JPanel {
 
                 Habitacion h = habs[i][j];
 
-                //=========================================================
+            //============================================================
                 //FILTRO MODO DESOCUPAR
                 if (modoDesocupar &&
                     !h.isOcupada()) {
@@ -326,7 +378,7 @@ public class PanelArbol extends JPanel {
                         radio * 2
                     );
 
-                //=========================================================
+            //============================================================
                 //COLOR HABITACION
                 if (h.isOcupada()) {
 
@@ -396,7 +448,7 @@ public class PanelArbol extends JPanel {
         }
         
         //=========================================================
-        //SIMBOLOGÍA
+        //SIMBOLOGIA
 
         int leyendaX = 20;
         int leyendaY = 20;

@@ -13,20 +13,32 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
+/**
+ * Ventana de menu para visualizar habitaciones del hotel
+ * 
+ * Desde esta ventana se puede:
+ * -Ver todo el hotel
+ * -Ver un piso especifico
+ * -Regresar al menu principal
+ * 
+ */
+
 public class VentanaMenu extends JFrame {
 	
 	private Hotel hotel;
-
+	
+	/**
+    * Constructor de la ventana menu
+    * 
+    * @param hotel hotel a visualizar
+    */
     public VentanaMenu(Hotel hotel) {
     	
     	this.hotel = hotel;
         setTitle("Menu Administrador");
-        //setSize(300,400);
-        //setSize(380,500);
         setSize(380,420);
         setLocationRelativeTo(null);
         setResizable(false);
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 
@@ -39,8 +51,7 @@ public class VentanaMenu extends JFrame {
 
         JPanel panelBotones = new JPanel();
         panelBotones.setLayout(new GridLayout(6,1,10,10));
-        //panelBotones.setBorder(BorderFactory.createEmptyBorder(20,50,20,50));
-        //panelBotones.setBorder(BorderFactory.createEmptyBorder(40,70,40,70));
+        
         panelBotones.setBorder(BorderFactory.createEmptyBorder(20,70,20,70));
 
         JButton btnVerTodo = new JButton("Ver Todo");
@@ -72,6 +83,11 @@ public class VentanaMenu extends JFrame {
         });
     }
     
+    /**
+    * Abre la ventana de visualizacion del hotel
+    * 
+    * @param piso piso a visualizar
+    */
     private void abrirArbol(int piso){
         new VentanaHotel(hotel, piso, false).setVisible(true);
         dispose();

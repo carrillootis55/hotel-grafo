@@ -2,8 +2,6 @@ package vistas;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -15,10 +13,24 @@ import javax.swing.SwingConstants;
 
 import hotel.Hotel;
 
+/**
+ * Ventana principal del sistema 
+* 
+* Desde esta ventana el administrador puede:
+* -Visualizar el hotel
+* -Desocupar habitaciones
+* -Regresar a la ventana inicial
+* 
+*/
 public class VentanaPrincipal extends JFrame {
 
     private Hotel hotel;
-
+    
+    /**
+    * Constructor de la ventana principal
+    * 
+    * @param hotel hotel que sera administrado
+    */
     public VentanaPrincipal(Hotel hotel) {
 
         this.hotel = hotel;

@@ -15,18 +15,27 @@ import javax.swing.SwingConstants;
 import hotel.Hotel;
 import hotel.SistemaHotel;
 
-public class VentanaInicio extends JFrame {
+/**
+ * Ventana inicial del sistema
+ * 
+ * Esta ventana es la pantalla de bienvenida
+ * 
+ * -Iniciar el sistema
+ * -Salir de la aplicacion
+ */
 
+public class VentanaInicio extends JFrame {
+	
+	/**
+    * Constructor de la ventana inicial
+    */
     public VentanaInicio() {
 
         setTitle("HOTEL");
-        //setSize(400,300);
-        //setSize(380,500);
         setSize(380,220);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
        
 
